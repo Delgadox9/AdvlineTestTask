@@ -12,7 +12,7 @@ class UpdateQuoteAction
      */
     public static function execute(mixed $request, Quote $quote): Quote
     {
-        return DB::transaction(function () use ($request, $quote,) {
+        return DB::transaction(function () use ($request, $quote) {
             $quote->update($request);
             SyncTagsAction::execute($quote, $request['tags']);
 

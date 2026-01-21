@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Policies\QuotePolicy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Models\Tag;
 
+#[UsePolicy(QuotePolicy::class)]
 class Quote extends Model
 {
     /** @use HasFactory<\Database\Factories\QuoteFactory> */
@@ -14,7 +16,7 @@ class Quote extends Model
 
     protected $fillable = [
         'title',
-        'text'
+        'text',
     ];
 
     public function tags(): BelongsToMany

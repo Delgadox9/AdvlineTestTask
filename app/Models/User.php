@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -11,7 +12,11 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
+
+    const DEFAULT_USER_ROLE_NAME = 'User';
+
+    const DEFAULT_ADMIN_ROLE_NAME = 'Admin';
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +27,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -45,5 +51,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role->name === self::DEFAULT_ADMIN_ROLE_NAME;
     }
 }
